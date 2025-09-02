@@ -1,1 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=AR+One+Sans:wght@400..700&display=swap');
 @import "tailwindcss";
+
+@theme{
+    --font-main: "AR One Sans", sans-serif;
+
+    --color-text: #222021;
+    --color-background: #f0f0f0;
+    --color-primary: #013293;
+    --color-secondary: #6bb8ff;
+    --color-accent: #07bb9a;
+}
