@@ -5,7 +5,7 @@ import Footer from "./components/footer";
 
 function App() {
   return (
-    <div>
+    <div className="font-main">
       <Header></Header>
       <Outlet/>
       <Toaster
