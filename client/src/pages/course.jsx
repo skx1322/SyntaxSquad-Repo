@@ -120,7 +120,7 @@ const Course = () => {
                     <div className="flex justify-between items-center mt-4">
                       <div className="flex flex-col sm:flex-row gap-2">
                         <span className="bg-gray-200 text-gray-800 text-sm font-semibold px-3 py-1 rounded">
-                          Price: {data.coursePrice}
+                          Price: RM {data.coursePrice}
                         </span>
                         <span className="bg-gray-200 text-gray-800 text-sm font-semibold px-3 py-1 rounded">
                           Released: {data.courseRelease}
