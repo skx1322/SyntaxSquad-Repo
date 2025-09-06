@@ -2,7 +2,9 @@ import React from 'react'
 
 const Footer = () => {
   return (
-    <div>Footer</div>
+    <footer className='bg-secondary/60'>
+      footer work in progress something like that
+    </footer>
   )
 }
 
