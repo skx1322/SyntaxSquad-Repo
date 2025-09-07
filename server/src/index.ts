@@ -1,7 +1,13 @@
 import { Elysia } from "elysia";
+import { server_config } from "./config/global.env";
+import router from "./router/router";
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000);
+const app = new Elysia().get("/", () => "Hello Elysia")
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
-);
+app.use(router);
+
+app.listen(server_config.PORT, () => {
+  console.log(
+    `ElysiaJS is running at ${app.server?.hostname}:${app.server?.port}`
+  );
+})
