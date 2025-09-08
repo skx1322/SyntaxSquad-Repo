@@ -7,12 +7,13 @@ export interface user {
     username: string,
     email: string,
     password_hash: string,
+    avatar: File | string,
     role: user_role,
     created_at: Date,
 };
 
 export type login = Pick<user, "username" | "password_hash">;
-export type register = Pick<user, "username" | "email" | "password_hash">;
+export type register = Pick<user, "username" | "email" | "password_hash" | "avatar">;
 export type studentID = Pick<user, "user_id">;
 export type studentDocument = Omit<user, "password_hash">;
 
