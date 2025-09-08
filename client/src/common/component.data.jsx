@@ -23,19 +23,19 @@ export const orgData = [
     img: "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/FuHua53.jpg",
   },
   {
-    orgName: "Taixuan",
+    orgName: "nothing yet",
     img: "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/FuHua53.jpg",
   },
   {
-    orgName: "Taixuan",
+    orgName: "something",
     img: "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/FuHua53.jpg",
   },
   {
-    orgName: "Taixuan",
+    orgName: "yee",
     img: "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/FuHua53.jpg",
   },
   {
-    orgName: "Taixuan",
+    orgName: "qwerty",
     img: "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/FuHua53.jpg",
   },
 ];
@@ -43,25 +43,25 @@ export const orgData = [
 export const heroData = [
   {
     courseName: "NodeJS Tutorial",
-    coursePath: "/",
+    courseID: "/",
     courseImg:
       "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/FuHua_Wallpaper.jpg",
   },
   {
     courseName: "Bun Tutorial",
-    coursePath: "/",
+    courseID: "/",
     courseImg:
       "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/FuHua_Wallpaper2.jpg",
   },
   {
     courseName: "TypeScript Tutorial",
-    coursePath: "/",
+    courseID: "/",
     courseImg:
       "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/Rubia2.jfif",
   },
   {
     courseName: "NodeJS Tutorial",
-    coursePath: "/",
+    courseID: "/",
     courseImg:
       "https://nerdantabucket0.sgp1.cdn.digitaloceanspaces.com/test/FuHua_Wallpaper.jpg",
   },
@@ -69,27 +69,27 @@ export const heroData = [
 
 export const categoryData = [
   {
-    category: "Programming",
+    category: "Networking",
     link: "",
   },
   {
-    category: "Programming",
+    category: "TypeScript",
     link: "",
   },
   {
-    category: "Programming",
+    category: "Python",
     link: "",
   },
   {
-    category: "Programming",
+    category: "NodeJS",
     link: "",
   },
   {
-    category: "Programming",
+    category: "Go",
     link: "",
   },
   {
-    category: "Programming",
+    category: "C++",
     link: "",
   },
 ];
