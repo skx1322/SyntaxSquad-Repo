@@ -14,5 +14,10 @@ export const userModel = new Elysia().model({
             t.String(),
             t.File()
         ])
+    }),
+    preference: t.Object({
+        user_id: t.String(),
+        category_id: t.String()
     })
+    
 })

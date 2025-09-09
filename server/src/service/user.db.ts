@@ -1,6 +1,6 @@
 import { status } from "elysia";
 import { DB } from "../config/db.setup";
-import { login, register, user } from "../types/user.type";
+import { course_items, login, register, user } from "../types/user.type";
 import { DBUtil } from "../utils/DB.query";
 import { HuaUtil } from "../utils/Encrypt";
 import { BucektUtil } from "../utils/S3";
@@ -80,4 +80,25 @@ export class USER_DB {
         }
         return userData[0]
     };
+
+    async profileUpdate(){
+
+    }
+
+    async preferenceCreate(user_id: string, category_id: string){
+        const newPreID = await IDUtil.NewUUID(4, true);
+    };
+
+    async getPreCourse(){
+
+    };
+
+    async getUserCourse(){
+
+    };
+
+    async assignUserCourse(){
+
+    };
+    
 }
