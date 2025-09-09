@@ -11,7 +11,7 @@ export const JWT_Login = new Elysia()
     .use(jwt({
         name: 'JWT_Login',
         schema: t.Object({
-            CleSessionID: t.String(),
+            sessionID: t.String(),
         }),
         secret: secret_key,
         exp: "24h",
@@ -21,7 +21,7 @@ export const JWT_Extend = new Elysia()
     .use(jwt({
         name: 'JWT_Extend',
         schema: t.Object({
-            CleSessionID: t.String(),
+            sessionID: t.String(),
         }),
         secret: secret_key,
         exp: "7d",
