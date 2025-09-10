@@ -58,3 +58,7 @@ export interface course_categories {
     category_name: string,
     description: string,
 }
+
+export type PartialInterface<T> = {
+    [P in keyof T]: T[P] | undefined;
+};

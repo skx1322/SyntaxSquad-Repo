@@ -2,7 +2,7 @@ import { Elysia } from "elysia";
 import { server_config } from "./config/global.env";
 import router from "./router/router";
 
-const app = new Elysia().get("/", () => "Hello Elysia")
+const app = new Elysia();
 
 app.use(router);
 

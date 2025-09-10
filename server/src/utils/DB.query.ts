@@ -1,5 +1,5 @@
-export namespace DBUtil { 
-    export function registerUser(){
+export namespace DBUtil {
+    export function registerUser() {
         return `
             insert into
             users (
@@ -16,28 +16,40 @@ export namespace DBUtil {
         `
     };
 
-    export function checkNameMulti(){
+    export function checkNameMulti() {
 
     };
 
-    export function checkEmailMulti(){
+    export function checkEmailMulti() {
 
     };
 
-    export function findUserOne(all?: boolean){
+    export function findUserOne(all?: boolean) {
         if (all) {
             return `SELECT * FROM users WHERE user_id = $1 OR email = $1 OR username = $1 LIMIT 1`;
         }
         else {
-            return `SELECT (user_id, username, email, role, avatar) WHERE user_id = $1 OR email = $1 LIMIT 1`;
+            return `SELECT (user_id, username, email, role, avatar) FROM users WHERE user_id = $1 OR email = $1 LIMIT 1`;
         }
     };
 
-    export function findUserMulti(){
+    export function findUserMulti() {
 
     };
 
-    export function createUserPreference(){
+    export function createCategory() {
+        return `INSERT INTO course_categories (category_id, category_name, description) VALUES ($1, $2, $3)`;
+    };
+
+    export function updateCategory() {
+        return `UPDATE course_categories (category_id, category_name, description) VALUES ($1, $2, $3)`;
+    }
+
+    export function findCategoryOne() {
+        return `SELECT * FROM course_categories WHERE category_id = $1 OR category_name = $1 LIMIT 1`;
+    };
+
+    export function createUserPreference() {
 
     };
 };
