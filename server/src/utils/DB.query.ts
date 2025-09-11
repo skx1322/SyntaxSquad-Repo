@@ -16,12 +16,8 @@ export namespace DBUtil {
         `
     };
 
-    export function checkNameMulti() {
-
-    };
-
-    export function checkEmailMulti() {
-
+    export function checkUserMulti() {
+        return `SELECT (user_id, username, email, role, avatar) FROM users WHERE user_id = $1 OR username = $1 OR email = $1`;
     };
 
     export function findUserOne(all?: boolean) {
@@ -50,6 +46,76 @@ export namespace DBUtil {
     };
 
     export function createUserPreference() {
+        return `
+            insert into
+            user_preferences (
+                "preference_id",
+                "user_id",
+                "category_id",
+            )
+            values
+            ($1, $2, $3)
+        `
+    };
+
+    export function updateUserPreferecen(){
+        return `
+            UPDATE  
+            user_preferences SET
+            category_id = $1
+            WHERE preference_id = $2 AND user_id = $3
+        `
+    };
+
+    export function getUserPreference(){
+        return `
+            SELECT * FROM user_preferences WHERE user_id = $1
+        `
+    };
+
+    export function createCourse(){
 
     };
+
+    export function readCourse(detail: boolean = false){
+
+    };
+
+    export function updateCourse(){
+
+    };
+
+    export function deleteCourse(){
+
+    };
+
+    export function createStructure(){
+
+    };
+
+    export function readStructure(){
+
+    };
+
+    export function updateStructure(){
+
+    };
+
+    export function deleteStructure(multi: boolean = false){
+
+    };
+
+    export function createTransaction(){
+
+    };
+
+    export function readTransaction(all: boolean = false){
+
+    };
+
+    export function updateTransaction(){
+
+    };
+    
+    
 };

@@ -42,13 +42,23 @@ const userAccount = new Elysia({ prefix: "/user" })
     userAccount.group("", (authApp)=>
         authApp
             .use(userMidware)
-            .get("/user", ({cookie: {clev_session}, getUser})=>{
+            .get("/account", ({cookie: {clev_session}, getUser})=>{
                 return status(200, {
                     success: true,
                     message: `User document retrieved.`,
                     output: getUser
                 })
             })
-    )   
+            .put("/account", ()=>{
+
+            })
+            .post("/account", ()=>{
+
+            })
+            .delete("/account", ()=>{
+
+            })
+    );   
 
 
+export default userAccount;

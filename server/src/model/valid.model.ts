@@ -19,5 +19,20 @@ export const userModel = new Elysia().model({
         user_id: t.String(),
         category_id: t.String()
     })
-    
-})
+});
+
+export const categoryModel = new Elysia().model({
+
+});
+
+export const tutorModel = new Elysia().model({
+
+});
+
+export const courseModel = new Elysia().model({
+
+});
+
+export const utilModel = new Elysia().model({
+
+});
