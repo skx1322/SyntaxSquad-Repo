@@ -45,6 +45,10 @@ export namespace DBUtil {
         return `SELECT * FROM course_categories WHERE category_id = $1 OR category_name = $1 LIMIT 1`;
     };
 
+    export function deleteCategoryOne() {
+        return `DELETE FROM course_categories WHERE category_id = $1`
+    }
+
     export function createUserPreference() {
         return `
             insert into
@@ -58,7 +62,7 @@ export namespace DBUtil {
         `
     };
 
-    export function updateUserPreferecen(){
+    export function updateUserPreferecen() {
         return `
             UPDATE  
             user_preferences SET
@@ -67,55 +71,83 @@ export namespace DBUtil {
         `
     };
 
-    export function getUserPreference(){
+    export function getUserPreference() {
         return `
             SELECT * FROM user_preferences WHERE user_id = $1
         `
     };
 
-    export function createCourse(){
+    export function createCourse() {
+        return `
+            INSERT INTO
+            courses (
+                "courses_id",
+                "course_thumbnail",
+                "title",
+                "description",
+                "tutor_id",
+                "category_id",
+            )
+            VALUES
+            ($1, $2, $3, $4, $5, $6)
+        `
+    };
+
+    export function readCourse(detail: boolean = false) {
+        return `
+            SELECT * FROM courses WHERE courses_id = $1 OR title = $1 LIMIT 1
+        `
+    };
+
+    export function updateCourse() {
+        return `UPDATE courses (course_thumbnail, title, description, category_id) VALUES ($1, $2, $3, $4)
+                WHERE courses_id = $1
+        `;
+    };
+
+    export function deleteCourse() {
+        return `DELETE FROM courses WHERE category_id = $1`
+    };
+
+    export function createStructure() {
+        return `INSERT INTO
+        course_items(
+            "item_id",
+            "courses_id",
+            "title",
+            "content",
+            "content_type",
+        )
+        VALUES
+            ($1, $2, $3, $4, $5)
+        `
+    };
+
+    export function readStructure() {
+        return `
+            SELECT * FROM course_items WHERE courses_id = $1 
+        `
+    };
+
+    export function updateStructure() {
+        return `UPDATE course_items (title, content, content_type) VALUES ($1, $2, $3) WHERE item_id = $1 AND courses_id = $2`;
+    };
+
+    export function deleteStructure(multi: boolean = false) {
+        return `DELETE FROM course_items WHERE item_id = $1 AND courses_id = $2`
+    };
+
+    export function createTransaction() {
 
     };
 
-    export function readCourse(detail: boolean = false){
+    export function readTransaction(all: boolean = false) {
 
     };
 
-    export function updateCourse(){
+    export function updateTransaction() {
 
     };
 
-    export function deleteCourse(){
 
-    };
-
-    export function createStructure(){
-
-    };
-
-    export function readStructure(){
-
-    };
-
-    export function updateStructure(){
-
-    };
-
-    export function deleteStructure(multi: boolean = false){
-
-    };
-
-    export function createTransaction(){
-
-    };
-
-    export function readTransaction(all: boolean = false){
-
-    };
-
-    export function updateTransaction(){
-
-    };
-    
-    
 };

@@ -45,7 +45,8 @@ export class CATEGORY_DB {
         return isExist;
     };
 
-    async deleteCategory() {
-
+    async deleteCategory(category_id: string) {
+        const isDelete = await DB.query(DBUtil.deleteCategoryOne(), [category_id]);
+        return isDelete;
     };
 }
