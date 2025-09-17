@@ -4,11 +4,11 @@ import { USER_DB } from "../service/user.db";
 import { JWT_Login } from "../config/jwt.config";
 import { userMidware } from "../middleware/auth";
 
-const userAccount = new Elysia({ prefix: "/tutor" })
-    userAccount.group("", (authApp)=>
+const tutorAccount = new Elysia({ prefix: "/tutor" })
+    tutorAccount.group("", (authApp)=>
         authApp
             .use(userMidware)
-            .get("/user", ({cookie: {clev_session}, getUser})=>{
+            .get("/register", ({cookie: {clev_session}, getUser})=>{
                 return status(200, {
                     success: true,
                     message: `User document retrieved.`,
@@ -27,4 +27,4 @@ const userAccount = new Elysia({ prefix: "/tutor" })
     );   
 
 
-export default userAccount;
+export default tutorAccount;

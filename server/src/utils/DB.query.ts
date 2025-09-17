@@ -1,23 +1,35 @@
 export namespace DBUtil {
     export function registerUser() {
         return `
-            insert into
+            INSERT INTO
             users (
-                "user_id",
-                "username",
-                "email",
-                "password_hash",
-                "role",
-                "user_avatar",
-                "created_at"
+                user_id,
+                username,
+                email,
+                role,
+                password_hash,
+                user_avatar
             )
-            values
-            ($1, $2, $3, $4, $5, $6, default)
-        `
+            VALUES
+            ($1, $2, $3, $4, $5, $6)
+        `;
     };
 
+    export function userProfile() {
+        return `
+            UPDATE users
+            SET
+                username = COALESCE($1, username),
+                user_avatar = COALESCE($2, user_avatar)
+                WHERE user_id = $3
+            RETURNING user_id, username, email, user_avatar;
+    `;
+    }
+
     export function checkUserMulti() {
-        return `SELECT (user_id, username, email, role, avatar) FROM users WHERE user_id = $1 OR username = $1 OR email = $1`;
+        return `
+            SELECT user_id, username, email, role, user_avatar FROM users WHERE user_id = $1 OR username = $1 OR email = $1;
+        `;
     };
 
     export function findUserOne(all?: boolean) {
@@ -25,129 +37,171 @@ export namespace DBUtil {
             return `SELECT * FROM users WHERE user_id = $1 OR email = $1 OR username = $1 LIMIT 1`;
         }
         else {
-            return `SELECT (user_id, username, email, role, avatar) FROM users WHERE user_id = $1 OR email = $1 LIMIT 1`;
+            return `SELECT user_id, username, email, role, user_avatar FROM users WHERE user_id = $1 OR email = $1 LIMIT 1`;
         }
     };
 
     export function findUserMulti() {
-
+        return `SELECT user_id, username, email, role, user_avatar FROM users;`;
     };
 
     export function createCategory() {
-        return `INSERT INTO course_categories (category_id, category_name, description) VALUES ($1, $2, $3)`;
+        return `INSERT INTO categories (category_id, category_name, description) VALUES ($1, $2, $3) RETURNING category_id;`;
     };
 
     export function updateCategory() {
-        return `UPDATE course_categories (category_id, category_name, description) VALUES ($1, $2, $3)`;
+        return `UPDATE categories SET category_name = $2, description = $3 WHERE category_id = $1;`;
     }
 
     export function findCategoryOne() {
-        return `SELECT * FROM course_categories WHERE category_id = $1 OR category_name = $1 LIMIT 1`;
+        return `SELECT * FROM categories WHERE category_id = $1 OR category_name = $2 LIMIT 1;`;
     };
 
     export function deleteCategoryOne() {
-        return `DELETE FROM course_categories WHERE category_id = $1`
+        return `DELETE FROM categories WHERE category_id = $1;`;
     }
 
     export function createUserPreference() {
         return `
-            insert into
+            INSERT INTO
             user_preferences (
-                "preference_id",
-                "user_id",
-                "category_id",
+                preference_id,
+                user_id,
+                category_id
             )
-            values
+            VALUES
             ($1, $2, $3)
-        `
+            RETURNING preference_id;
+        `;
     };
 
     export function updateUserPreferecen() {
         return `
-            UPDATE  
-            user_preferences SET
-            category_id = $1
-            WHERE preference_id = $2 AND user_id = $3
-        `
+            UPDATE user_preferences 
+            SET category_id = $1
+            WHERE preference_id = $2 AND user_id = $3;
+        `;
     };
 
     export function getUserPreference() {
         return `
-            SELECT * FROM user_preferences WHERE user_id = $1
+            SELECT * FROM user_preferences WHERE user_id = $1;
         `
     };
 
     export function createCourse() {
         return `
-            INSERT INTO
+           INSERT INTO
             courses (
-                "courses_id",
-                "course_thumbnail",
-                "title",
-                "description",
-                "tutor_id",
-                "category_id",
+                course_id,
+                title,
+                description,
+                tutor_id,
+                category_id
             )
             VALUES
-            ($1, $2, $3, $4, $5, $6)
+            ($1, $2, $3, $4, $5)
+            RETURNING course_id;
         `
     };
 
     export function readCourse(detail: boolean = false) {
         return `
-            SELECT * FROM courses WHERE courses_id = $1 OR title = $1 LIMIT 1
+            SELECT * FROM courses WHERE course_id = $1 OR title = $1 LIMIT 1;
         `
     };
 
     export function updateCourse() {
-        return `UPDATE courses (course_thumbnail, title, description, category_id) VALUES ($1, $2, $3, $4)
-                WHERE courses_id = $1
+        return `
+            UPDATE courses 
+            SET title = $2, description = $3, category_id = $4
+            WHERE course_id = $1;
         `;
     };
 
     export function deleteCourse() {
-        return `DELETE FROM courses WHERE category_id = $1`
+        return `DELETE FROM courses WHERE course_id = $1;`;
     };
 
     export function createStructure() {
-        return `INSERT INTO
-        course_items(
-            "item_id",
-            "courses_id",
-            "title",
-            "content",
-            "content_type",
-        )
-        VALUES
+        return `
+            INSERT INTO
+            course_items (
+                item_id,
+                course_id,
+                title,
+                content,
+                content_type
+            )
+            VALUES
             ($1, $2, $3, $4, $5)
-        `
+            RETURNING item_id;
+        `;
     };
 
     export function readStructure() {
         return `
-            SELECT * FROM course_items WHERE courses_id = $1 
+            SELECT * FROM course_items WHERE course_id = $1;
         `
     };
 
     export function updateStructure() {
-        return `UPDATE course_items (title, content, content_type) VALUES ($1, $2, $3) WHERE item_id = $1 AND courses_id = $2`;
+        return `UPDATE course_items SET title = $1, content = $2, content_type = $3 WHERE item_id = $4 AND course_id = $5;`;
     };
 
-    export function deleteStructure(multi: boolean = false) {
-        return `DELETE FROM course_items WHERE item_id = $1 AND courses_id = $2`
+    export function deleteStructure(multi?: boolean) {
+        if (multi) {
+            return `DELETE FROM course_items WHERE course_id = $1;`;
+        } else {
+            return `DELETE FROM course_items WHERE item_id = $1 AND course_id = $2;`;
+        }
     };
 
     export function createTransaction() {
-
+        return `
+            INSERT INTO transactions (transaction_id, user_id, course_id, amount, status)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING transaction_id;
+        `;
     };
 
     export function readTransaction(all: boolean = false) {
-
+        if (all) {
+            return `SELECT * FROM transactions;`;
+        } else {
+            return `SELECT * FROM transactions WHERE user_id = $1;`;
+        }
     };
 
     export function updateTransaction() {
-
+        return `
+            UPDATE transactions
+            SET status = $2
+            WHERE transaction_id = $1;
+        `;
     };
 
+    export function roleConfig() {
+        return `
+            UPDATE users
+            SET role = $1
+            WHERE user_id = $2
+            RETURNING user_id, role;
+    `;
+    };
 
+    export function createTutorPortfolio() {
+        return `
+        INSERT INTO tutor_portfolios (
+            portfolio_id,
+            tutor_id,
+            bio,
+            certifications,
+            experience,
+            portfolio_url
+        )
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING portfolio_id;
+    `;
+    };
 };

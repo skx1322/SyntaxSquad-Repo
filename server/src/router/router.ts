@@ -4,7 +4,7 @@ import { CorsDefault } from "../config/cors.config";
 
 const router = new Elysia({ prefix: "/api" });
 
-router.group("", (app) =>
+router.group("/user", (app) =>
     app
         .use(CorsDefault)
         .use(userAccount)

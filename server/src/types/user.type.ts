@@ -7,18 +7,32 @@ export interface user {
     username: string,
     email: string,
     password_hash: string,
-    avatar: File | string,
+    user_avatar: File | string,
     role: user_role,
     created_at: Date,
 };
 
+export interface tutor_portfolios {
+    portfolio_id: string,
+    tutor_id: string,
+    bio: string,
+    certifications: string,
+    experience: JSON,
+    portfolio_url: string,
+    created_at: Date
+    updated_at: Date
+}
+
 export type login = Pick<user, "username" | "password_hash">;
-export type register = Pick<user, "username" | "email" | "password_hash" | "avatar">;
+export type register = Pick<user, "username" | "email" | "password_hash" | "user_avatar">;
+export type profile = Partial<Pick<user, "username" | "user_avatar">>
 export type studentID = Pick<user, "user_id">;
 export type studentDocument = Omit<user, "password_hash">;
 
-export interface studentCourse extends studentDocument, user_preferences{};
-export interface userTransaction extends studentDocument, transactions{};
+export interface studentCourse extends studentDocument, user_preferences { };
+export interface userTransaction extends studentDocument, transactions { };
+
+export type tutor_portfolio_map = Omit<tutor_portfolios, "portfolio_id" | "created_at" | "updated_at">
 
 export interface user_preferences {
     preference_id: string,
