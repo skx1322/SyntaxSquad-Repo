@@ -59,10 +59,31 @@ userAccount.group("", (authApp) =>
         }, {
             body: "update_profile"
         })
-        .post("/account", () => {
-            
+        .post("/account-preference", () => {
+
+        })
+        .put("/preference", () => {
+
         })
         .delete("/account", () => {
+
+        })
+);
+
+
+userAccount.group("", (authApp) =>
+    authApp
+        .use(userMidware)
+        .post("/course-account", () => {
+
+        })
+        .get("/course-account", () => {
+
+        })
+        .put("/course-account", () => {
+
+        })
+        .delete("/course-account", () => {
 
         })
 );

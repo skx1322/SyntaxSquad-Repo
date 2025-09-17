@@ -37,11 +37,13 @@ export class USER_DB {
 
             const findUser = await this.getUser(userID);
             if (!findUser) {
+                DB.query('ROLLBACK')
                 return status(500, {
                     success: false,
                     message: `Server failed to create user account. Please try again.`
                 });
             };
+            DB.query('COMMIT')
             return status(200, {
                 success: true,
                 message: `Successfully created an user account.`,
@@ -116,12 +118,14 @@ export class USER_DB {
         ]) as unknown as Pick<user, "user_id" | "username" | "user_avatar">[];
 
         if (result.length === 0) {
+            DB.query('ROLLBACK')
             return status(404, {
                 success: false,
                 message: `User not found or nothing to update.`
             });
         };
 
+        DB.query("COMMIT")
         const updatedUser = result[0];
         return status(200, {
             success: true,

@@ -55,7 +55,7 @@ export interface courses {
     tutor_id: string,
     category_id: string,
     created_at: string,
-    user: studentID[],
+    course_thumbnail: string
 }
 
 export interface course_items {
