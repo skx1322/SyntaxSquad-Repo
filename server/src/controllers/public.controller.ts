@@ -1,7 +1,7 @@
 import Elysia, { status } from "elysia";
 import { userMidware } from "../middleware/auth";
 
-const publicCall = new Elysia({ prefix: "/public" })
+const publicCall = new Elysia({ name: "/public" })
     publicCall.group("", (publicContent)=>
         publicContent
             .post("/course", ()=>{

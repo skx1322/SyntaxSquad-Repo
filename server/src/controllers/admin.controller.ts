@@ -4,7 +4,7 @@ import { USER_DB } from "../service/user.db";
 import { JWT_Login } from "../config/jwt.config";
 import { userMidware } from "../middleware/auth";
 
-const adminAccount = new Elysia({ prefix: "/admin" })
+const adminAccount = new Elysia({ name: "/admin" })
 adminAccount.group("", (adminAcc) =>
     adminAcc
         .use(userMidware)

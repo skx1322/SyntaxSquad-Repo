@@ -2,6 +2,12 @@ import { SegmentLimit } from "../types/other.type";
 import { randomUUIDv5, randomUUIDv7 } from "bun";
 
 export namespace IDUtil {
+        /** 
+        *@default
+        *@param {SegmentLength} Number Range 0, 1, 2, 3, 4.
+        *@param {Symbol} Boolean true/false, if true then output ID will have '-' else none.
+        *@return {NewUUID(1, true)} 
+        */
     export async function NewUUID(SegmentLength: SegmentLimit = 2, Symbol: boolean = true): Promise<string> {
         const uuid = randomUUIDv7("hex");
         if (!uuid) {

@@ -36,7 +36,7 @@ export class USER_DB {
             ]);
 
             const findUser = await this.getUser(userID);
-            if (!findUser) {
+            if (!findUser || findUser instanceof ElysiaCustomStatusResponse) {
                 DB.query('ROLLBACK')
                 return status(500, {
                     success: false,
@@ -59,79 +59,102 @@ export class USER_DB {
     };
 
     async loginUser(user: login) {
-        const isExist = await DB.query(DBUtil.findUserOne(true), [user.username]);
-        const verifyPassword = await HuaUtil.VerifyBcrypt(user.password_hash, isExist[0].password_hash);
-        if (!verifyPassword) {
-            return status(401, {
+        try {
+            const isExist = await DB.query(DBUtil.findUserOne(true), [user.username]);
+            const verifyPassword = await HuaUtil.VerifyBcrypt(user.password_hash, isExist[0].password_hash);
+            if (!verifyPassword) {
+                return status(401, {
+                    success: false,
+                    message: `Password did not match.`
+                });
+            };
+            return isExist[0].user_id;
+        } catch (error) {
+            console.error(error);
+            return status(500, {
                 success: false,
-                message: `Password did not match.`
-            });
-        };
-
-        return isExist[0].user_id;
+                message: `Something went wrong when logging into account. Internal server error.`
+            })
+        }
     }
 
     async getUser(user_id: string, all?: boolean) {
-        if (all) {
-            const userData = await DB.query(DBUtil.findUserOne(all), [user_id]) as unknown as user[];
+        try {
+            if (all) {
+                const userData = await DB.query(DBUtil.findUserOne(all), [user_id]) as unknown as user[];
+                if (!userData[0]) {
+                    return status(404, {
+                        success: false,
+                        message: `User not found.`
+                    })
+                }
+                return userData[0]
+            }
+            const userData = await DB.query(DBUtil.findUserOne(), [user_id]) as unknown as Omit<user, "password_hash">[];
             if (!userData[0]) {
                 return status(404, {
                     success: false,
                     message: `User not found.`
                 })
             }
-            return userData[0]
-        }
-        const userData = await DB.query(DBUtil.findUserOne(), [user_id]) as unknown as Omit<user, "password_hash">[];
-        if (!userData[0]) {
-            return status(404, {
+            return userData[0];
+        } catch (error) {
+            console.error(error);
+            return status(500, {
                 success: false,
-                message: `User not found.`
+                message: `Internal server egg.`
             })
         }
-        return userData[0]
     };
 
     async profileUpdate(user_id: string, user: profile) {
-        const findUser = await this.getUser(user_id);
-        if (findUser instanceof ElysiaCustomStatusResponse) {
-            return findUser
-        };
+        try {
+            const findUser = await this.getUser(user_id);
+            if (findUser instanceof ElysiaCustomStatusResponse) {
+                return findUser
+            };
 
-        let currentAvatar: string | File | null = findUser.user_avatar;
-        if (user.user_avatar instanceof File) {
-            currentAvatar = await BucektUtil.uploadImage(user.user_avatar, "public-read");
-        } else if (user.user_avatar === null) {
-            currentAvatar = null;
-        }
+            let currentAvatar: string | File | null = findUser.user_avatar;
+            if (user.user_avatar instanceof File) {
+                currentAvatar = await BucektUtil.uploadImage(user.user_avatar, "public-read");
+            } else if (user.user_avatar === null) {
+                currentAvatar = null;
+            }
 
-        const map = {
-            username: user.username ?? findUser.username,
-            user_avatar: currentAvatar,
-            user_id: user_id,
-        };
+            const map = {
+                username: user.username ?? findUser.username,
+                user_avatar: currentAvatar,
+                user_id: user_id,
+            };
 
-        const result = await DB.query(DBUtil.userProfile(), [
-            map.username,
-            map.user_avatar,
-            map.user_id
-        ]) as unknown as Pick<user, "user_id" | "username" | "user_avatar">[];
+            const result = await DB.query(DBUtil.userProfile(), [
+                map.username,
+                map.user_avatar,
+                map.user_id
+            ]) as unknown as Pick<user, "user_id" | "username" | "user_avatar">[];
 
-        if (result.length === 0) {
-            DB.query('ROLLBACK')
-            return status(404, {
+            if (result.length === 0) {
+                DB.query('ROLLBACK')
+                return status(404, {
+                    success: false,
+                    message: `User not found or nothing to update.`
+                });
+            };
+
+            DB.query("COMMIT")
+            const updatedUser = result[0];
+            return status(200, {
+                success: true,
+                message: `User profile successfully updated!`,
+                output: updatedUser
+            })
+        } catch (error) {
+            console.error(error);
+            return status(500, {
                 success: false,
-                message: `User not found or nothing to update.`
-            });
-        };
-
-        DB.query("COMMIT")
-        const updatedUser = result[0];
-        return status(200, {
-            success: true,
-            message: `User profile successfully updated!`,
-            output: updatedUser
-        })
+                message: `Failed to update user profile. Internal server error.`
+            })
+        }
     }
 
     async preferenceCreate(user_id: string, category_id: string) {

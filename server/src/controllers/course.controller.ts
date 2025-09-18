@@ -1,8 +1,8 @@
 import Elysia, { status } from "elysia";
 import { userMidware } from "../middleware/auth";
 
-const categoryCall = new Elysia({ prefix: "/category" })
-    categoryCall.group("", (courseApp)=>
+const courseCall = new Elysia({ name: "/category" })
+    courseCall.group("", (courseApp)=>
         courseApp
             .use(userMidware)
             .post("", ()=>{
@@ -19,7 +19,7 @@ const categoryCall = new Elysia({ prefix: "/category" })
             })
     );   
 
-    categoryCall.group("", (itemApp)=>
+    courseCall.group("", (itemApp)=>
         itemApp
             .use(userMidware)
             .post("", ()=>{
@@ -36,4 +36,4 @@ const categoryCall = new Elysia({ prefix: "/category" })
             })
     );   
 
-export default categoryCall;
+export default courseCall;
