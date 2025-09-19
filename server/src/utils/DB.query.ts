@@ -183,25 +183,80 @@ export namespace DBUtil {
 
     export function roleConfig() {
         return `
-            UPDATE users
-            SET role = $1
-            WHERE user_id = $2
-            RETURNING user_id, role;
-    `;
+                UPDATE users
+                SET role = $1
+                WHERE user_id = $2
+                RETURNING user_id, role;
+            `;
     };
+
+    export function updateUserRoleDemote() {
+        return `UPDATE users SET role = 'Student' WHERE user_id = $1;`;
+    }
+
+    export function deleteTutorPortfolio() {
+        return `DELETE FROM tutor_portfolios WHERE tutor_id = $1;`;
+    }
+
 
     export function createTutorPortfolio() {
         return `
-        INSERT INTO tutor_portfolios (
-            portfolio_id,
-            tutor_id,
-            bio,
-            certifications,
-            experience,
-            portfolio_url
-        )
-        VALUES ($1, $2, $3, $4, $5, $6)
-        RETURNING portfolio_id;
-    `;
+            INSERT INTO tutor_portfolios (
+                portfolio_id,
+                tutor_id,
+                bio,
+                certifications,
+                experience,
+                portfolio_url
+            )
+            VALUES ($1, $2, $3, $4, $5, $6)
+            RETURNING portfolio_id;
+        `;
     };
+
+    export function updateTutorPortfolio() {
+        return `
+            UPDATE tutor_portfolios
+            SET 
+                bio = COALESCE($1, bio),
+                certifications = COALESCE($2, certifications),
+                experience = COALESCE($3::jsonb, experience),
+                portfolio_url = COALESCE($4, portfolio_url),
+                updated_at = CURRENT_TIMESTAMP
+            WHERE tutor_id = $5
+            RETURNING *;
+        `;
+    };
+
+    export function getTutor() {
+        return `
+            SELECT
+                u.user_id,
+                u.username,
+                u.email,
+                u.user_avatar,
+                u.role,
+                p.bio,
+                p.certifications,
+                p.experience,
+                p.portfolio_url
+            FROM users u
+            LEFT JOIN tutor_portfolios p ON u.user_id = p.tutor_id
+            WHERE u.user_id = $1 AND u.role = 'Tutor'
+            LIMIT 1;
+        `;
+    };
+
+    export function getTutorCourse() {
+        return `
+            SELECT
+                course_id,
+                title,
+                description,
+                created_at,
+                course_thumbnail
+            FROM courses
+            WHERE tutor_id = $1;
+        `;
+    }
 };

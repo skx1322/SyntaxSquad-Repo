@@ -33,7 +33,32 @@ export const categoryModel = new Elysia().model({
 });
 
 export const tutorModel = new Elysia().model({
-
+    portfolio: t.Object({
+        bio: t.String(),
+        certifications: t.String(),
+        experience: t.Optional(t.Object({
+            company: t.String(),
+            position: t.String(),
+            startDate: t.Date(),
+            endDate: t.Nullable(t.Date()),
+            description: t.String(),
+            isCurrent: t.Boolean(),
+        })),
+        portfolio_url: t.String()
+    }),
+    portfolio_update: t.Partial(t.Object({
+        bio: t.String(),
+        certifications: t.String(),
+        experience: t.Optional(t.Object({
+            company: t.String(),
+            position: t.String(),
+            startDate: t.Date(),
+            endDate: t.Nullable(t.Date()),
+            description: t.String(),
+            isCurrent: t.Boolean(),
+        })),
+        portfolio_url: t.String()
+    }))
 });
 
 export const courseModel = new Elysia().model({

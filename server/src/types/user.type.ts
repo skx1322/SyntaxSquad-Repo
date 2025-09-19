@@ -17,10 +17,19 @@ export interface tutor_portfolios {
     tutor_id: string,
     bio: string,
     certifications: string,
-    experience: JSON,
+    experience?: experiences,
     portfolio_url: string,
     created_at: Date
     updated_at: Date
+}
+
+export interface experiences {
+    company: string,
+    position: string,
+    startDate: Date,
+    endDate: Date | null,
+    description: string,
+    isCurrent: boolean
 }
 
 export type login = Pick<user, "username" | "password_hash">;
@@ -32,7 +41,7 @@ export type studentDocument = Omit<user, "password_hash">;
 export interface studentCourse extends studentDocument, user_preferences { };
 export interface userTransaction extends studentDocument, transactions { };
 
-export type tutor_portfolio_map = Omit<tutor_portfolios, "portfolio_id" | "created_at" | "updated_at">
+export type tutor_portfolio_map = Omit<tutor_portfolios, "tutor_id" | "portfolio_id" | "created_at" | "updated_at">
 
 export interface user_preferences {
     preference_id: string,
@@ -63,7 +72,7 @@ export interface course_items {
     course_id: string,
     title: string,
     content: string,
-    content_type: "Video" | "Image" | "Slides",
+    content_type: "Video" | "Image" | "Slide" | "Link",
     created_at: Date,
 }
 
