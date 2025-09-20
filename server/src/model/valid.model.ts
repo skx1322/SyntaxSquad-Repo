@@ -29,7 +29,18 @@ export const userModel = new Elysia().model({
 });
 
 export const categoryModel = new Elysia().model({
-
+    category_create: t.Object({
+        category_name: t.String(),
+        description: t.String()
+    }),
+    category_update: t.Object({
+        category_id: t.String(),
+        category_name: t.Optional(t.String()),
+        description: t.Optional(t.String())
+    }),
+    category_search: t.Object({
+        category_id: t.String(),
+    })
 });
 
 export const tutorModel = new Elysia().model({

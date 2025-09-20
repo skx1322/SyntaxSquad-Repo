@@ -1,4 +1,4 @@
-export class COURSE_DB {
+export class ITEM_DB {
     async structureCreate(){
 
     };

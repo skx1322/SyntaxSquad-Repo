@@ -40,7 +40,7 @@ tutorAccount.group("", (authApp) =>
 
             return await new TUTOR_DB().getTutorCourse(getUser.user_id);
         })
-        .delete("/change", async({ getUser }) => {
+        .delete("/", async({ getUser }) => {
             if (getUser instanceof ElysiaCustomStatusResponse) {
                 return getUser;
             };

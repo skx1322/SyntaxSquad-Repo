@@ -45,20 +45,24 @@ export namespace DBUtil {
         return `SELECT user_id, username, email, role, user_avatar FROM users;`;
     };
 
+    export function findAllCategories() {
+        return `SELECT * FROM categories;`;
+    }
+
     export function createCategory() {
         return `INSERT INTO categories (category_id, category_name, description) VALUES ($1, $2, $3) RETURNING category_id;`;
     };
 
     export function updateCategory() {
-        return `UPDATE categories SET category_name = $2, description = $3 WHERE category_id = $1;`;
+        return `UPDATE categories SET category_name = $2, description = $3 WHERE category_id = $1 RETURNING category_name;`;
     }
 
     export function findCategoryOne() {
-        return `SELECT * FROM categories WHERE category_id = $1 OR category_name = $2 LIMIT 1;`;
+        return `SELECT * FROM categories WHERE category_id = $1 OR category_name = $1 LIMIT 1;`;
     };
 
     export function deleteCategoryOne() {
-        return `DELETE FROM categories WHERE category_id = $1;`;
+        return `DELETE FROM categories WHERE category_id = $1 RETURNING category_id;`;
     }
 
     export function createUserPreference() {
