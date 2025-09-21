@@ -66,6 +66,17 @@ export interface courses {
     course_thumbnail: File | string
 }
 
+export interface coursesFull {
+    course_id: string,
+    title: string,
+    description: string,
+    tutor_id: string,
+    created_at: string,
+    course_thumbnail: string,
+    course_items: Omit<course_items[], "course_id">;
+}
+
+
 export type courses_partial = courses & course_categories;
 
 export interface course_categories{

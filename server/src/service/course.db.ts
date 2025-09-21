@@ -1,6 +1,6 @@
 import { status } from "elysia";
 import { DB } from "../config/db.setup";
-import { courses } from "../types/user.type";
+import { course_items, courses, coursesFull } from "../types/user.type";
 import { BucektUtil } from "../utils/S3";
 import { IDUtil } from "../utils/UUID";
 import { DBUtil } from "../utils/DB.query";
@@ -45,10 +45,10 @@ export class COURSE_DB {
         }
     };
 
-    async updateCourse(course_id: string, courseData: Partial<Omit<courses, "course_id" | "tutor_id" | "created_at">> & { category_id?: string[] }) {
+    async updateCourse(tutor_id: string, course_id: string, courseData: Partial<Omit<courses, "course_id" | "tutor_id" | "created_at">> & { category_id?: string[] }) {
         const { title, description, course_thumbnail, category_id } = courseData;
         try {
-            const isExist = await DB.query(DBUtil.readCourse(), [course_id]) as courses[];
+            const isExist = await DB.query(DBUtil.readCourse(), [course_id, tutor_id]) as courses[];
             if (isExist.length === 0) {
                 return status(404, {
                     success: false,
@@ -64,7 +64,7 @@ export class COURSE_DB {
             }
 
             const result = await DB.query(DBUtil.updateCourse(), [
-                title, description, currentThumbnail, course_id
+                title, description, currentThumbnail, course_id, tutor_id
             ]);
             if (category_id) {
                 await DB.query(DBUtil.deleteCourseCategories(), [course_id])
@@ -90,9 +90,9 @@ export class COURSE_DB {
         }
     };
 
-    async getCoursePartialOne(course_id: string) {
+    async getCoursePartialOne(course_id: string, tutor_id: string) {
         try {
-            const result = await DB.query(DBUtil.readCourseWithCategories(), [course_id]);
+            const result = await DB.query(DBUtil.readCourseWithCategories(), [course_id, tutor_id]);
             if (result.length === 0) {
                 return status(404, {
                     success: false,
@@ -114,13 +114,39 @@ export class COURSE_DB {
         }
     };
 
-    async getCourseFull() {
+    async getCourseFull(course_id: string, tutor_id: string) {
+        try {
+            const result = await DB.query(DBUtil.readCourseFull(), [course_id, tutor_id]);
+            if (result.length === 0) {
+                return status(404, {
+                    success: false,
+                    message: `Course does not exist.`
+                });
+            };
 
+            const courseData = result[0] as coursesFull;
+
+            if (courseData.course_items && courseData.course_items.length === 1 && courseData.course_items[0].item_id === null) {
+                courseData.course_items = [];
+            }
+
+            return status(200, {
+                success: true,
+                message: `Course retrieved successfully.`,
+                output: courseData
+            })
+        } catch (error) {
+            console.error(error);
+            return status(500, {
+                success: false,
+                message: `Unable to retrieve detailed course due to internal server error.`
+            })
+        }
     };
 
-    async deleteCourse(course_id: string) {
+    async deleteCourse(tutor_id: string, course_id: string) {
         try {
-            const result = await DB.query(DBUtil.readCourse(), [course_id]) as courses[];
+            const result = await DB.query(DBUtil.readCourse(), [course_id, tutor_id]) as courses[];
             if (result.length === 0) {
                 return status(404, {
                     success: false,
@@ -129,7 +155,7 @@ export class COURSE_DB {
             };
 
             const deleteThumbnail = await BucektUtil.deleteImage(result[0].course_thumbnail as string)
-            const deleteCourse = await DB.query(DBUtil.deleteCourse(), [course_id]);
+            const deleteCourse = await DB.query(DBUtil.deleteCourse(), [course_id, tutor_id]);
 
             return status(200, {
                 success: true,

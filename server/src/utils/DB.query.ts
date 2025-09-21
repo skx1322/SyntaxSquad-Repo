@@ -118,7 +118,7 @@ export namespace DBUtil {
 
     export function readCourse() {
         return `
-            SELECT * FROM courses WHERE course_id = $1 OR title = $1 LIMIT 1;
+            SELECT * FROM courses WHERE course_id = $1 AND tutor_id = $2 LIMIT 1;
         `
     };
 
@@ -134,10 +134,33 @@ export namespace DBUtil {
                 array_agg(cc.category_id) AS categories
             FROM courses c
             LEFT JOIN course_categories cc ON c.course_id = cc.course_id
-            WHERE c.course_id = $1 OR c.title = $1
+            WHERE c.course_id = $1 AND c.tutor_id = $2
             GROUP BY c.course_id;
         `
     };
+
+    export function readCourseFull(){
+        return `
+            SELECT
+                c.course_id,
+                c.title,
+                c.description,
+                c.tutor_id,
+                c.created_at,
+                c.course_thumbnail,
+                json_agg(json_build_object(
+                    'item_id', ci.item_id,
+                    'title', ci.title,
+                    'content', ci.content,
+                    'content_type', ci.content_type,
+                    'created_at', ci.created_at
+                )) AS course_items
+            FROM courses c
+            LEFT JOIN course_items ci ON c.course_id = ci.course_id
+            WHERE c.course_id = $1 AND c.tutor_id = $2
+            GROUP BY c.course_id;
+        `;
+    }
 
     export function updateCourse() {
         return `
@@ -146,13 +169,13 @@ export namespace DBUtil {
                 title = COALESCE($1, title),
                 description = COALESCE($2, description),
                 course_thumbnail = COALESCE($3, course_thumbnail)
-            WHERE course_id = $4
+            WHERE course_id = $4 AND tutor_id = $5
             RETURNING *;
         `;
     };
 
     export function deleteCourse() {
-        return `DELETE FROM courses WHERE course_id = $1 RETURNING course_id;`;
+        return `DELETE FROM courses WHERE course_id = $1 AND tutor_id = $2 RETURNING course_id;`;
     };
 
     export function deleteCourseCategories() {
