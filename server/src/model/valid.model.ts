@@ -73,7 +73,28 @@ export const tutorModel = new Elysia().model({
 });
 
 export const courseModel = new Elysia().model({
-
+    course_create: t.Object({
+        title: t.String(),
+        description: t.String(),
+        course_thumbnail: t.Union([
+            t.File(),
+            t.String()
+        ]),
+        category_id: t.ArrayString(t.String()),
+    }),
+    course_update: t.Object({
+        title: t.Optional(t.String()),
+        description: t.Optional(t.String()),
+        course_thumbnail: t.Optional(t.Union([
+            t.File(),
+            t.String()
+        ])),
+        course_id: t.String(),
+        category_id: t.Optional(t.ArrayString(t.String())),
+    }),
+    course_partial_one: t.Object({
+        course_id: t.String()
+    })
 });
 
 export const utilModel = new Elysia().model({

@@ -1,39 +1,93 @@
-import Elysia, { status } from "elysia";
+import Elysia, { ElysiaCustomStatusResponse, status, t } from "elysia";
 import { userMidware } from "../middleware/auth";
+import { courseModel } from "../model/valid.model";
+import { COURSE_DB } from "../service/course.db";
 
-const courseCall = new Elysia({ name: "/category" })
-    courseCall.group("", (courseApp)=>
-        courseApp
-            .use(userMidware)
-            .post("", ()=>{
+const courseCall = new Elysia({ name: "/course" })
+courseCall.group("/config", (courseApp) =>
+    courseApp
+        .use(userMidware)
+        .use(courseModel)
+        .post("", async ({ body, getUser }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
 
-            })
-            .get("", ()=>{
+            return await new COURSE_DB().createCourse(body, getUser.user_id);
+        }, {
+            body: "course_create"
+        })
+        .get("/partial-one/:course_id", async ({ params: { course_id }, getUser }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
 
-            })
-            .put("", ()=>{
+            return await new COURSE_DB().getCoursePartialOne(course_id);
+        }, {
+            params: "course_partial_one"
+        })
+        .get("", () => {
 
-            })
-            .delete("", ()=>{
-                
-            })
-    );   
+        })
+        .put("", async ({ body: { course_id, title, description, course_thumbnail, category_id }, getUser }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
 
-    courseCall.group("", (itemApp)=>
-        itemApp
-            .use(userMidware)
-            .post("", ()=>{
+            return await new COURSE_DB().updateCourse(course_id, { title, description, course_thumbnail, category_id });
+        }, {
+            body: "course_update"
+        })
+        .delete("", async({ body: { course_id }, getUser }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
 
-            })
-            .get("", ()=>{
+            return await new COURSE_DB().deleteCourse(course_id);
+        }, {
+            body: "course_partial_one"
+        })
+);
 
-            })
-            .put("", ()=>{
+courseCall.group("/items", (itemApp) =>
+    itemApp
+        .use(userMidware)
+        .post("", () => {
 
-            })
-            .delete("", ()=>{
-                
-            })
-    );   
+        })
+        .get("", () => {
+
+        })
+        .put("", () => {
+
+        })
+        .delete("", () => {
+
+        })
+);
 
 export default courseCall;

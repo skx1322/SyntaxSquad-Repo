@@ -115,7 +115,7 @@ export class TUTOR_DB {
             return status(200, {
                 success: true,
                 message: "Tutor's courses retrieved successfully.",
-                output: result[0]
+                output: result
             })
         } catch (error) {
             console.error(error);

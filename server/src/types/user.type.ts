@@ -62,16 +62,22 @@ export interface courses {
     title: string,
     description: string,
     tutor_id: string,
-    category_id: string,
     created_at: string,
-    course_thumbnail: string
+    course_thumbnail: File | string
+}
+
+export type courses_partial = courses & course_categories;
+
+export interface course_categories{
+    course_id: string,
+    category_id: string,
 }
 
 export interface course_items {
     item_id: string,
     course_id: string,
     title: string,
-    content: string,
+    content: File | string,
     content_type: "Video" | "Image" | "Slide" | "Link",
     created_at: Date,
 }

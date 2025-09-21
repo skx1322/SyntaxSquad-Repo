@@ -101,7 +101,7 @@ export namespace DBUtil {
                 title,
                 description,
                 tutor_id,
-                category_id
+                course_thumbnail
             )
             VALUES
             ($1, $2, $3, $4, $5)
@@ -109,23 +109,55 @@ export namespace DBUtil {
         `
     };
 
-    export function readCourse(detail: boolean = false) {
+    export function createCourseCategory() {
+        return `
+            INSERT INTO course_categories (course_id, category_id)
+            VALUES ($1, $2)
+        `;
+    };
+
+    export function readCourse() {
         return `
             SELECT * FROM courses WHERE course_id = $1 OR title = $1 LIMIT 1;
         `
     };
 
+    export function readCourseWithCategories() {
+        return `
+            SELECT
+                c.course_id,
+                c.title,
+                c.description,
+                c.tutor_id,
+                c.created_at,
+                c.course_thumbnail,
+                array_agg(cc.category_id) AS categories
+            FROM courses c
+            LEFT JOIN course_categories cc ON c.course_id = cc.course_id
+            WHERE c.course_id = $1 OR c.title = $1
+            GROUP BY c.course_id;
+        `
+    };
+
     export function updateCourse() {
         return `
-            UPDATE courses 
-            SET title = $2, description = $3, category_id = $4
-            WHERE course_id = $1;
+            UPDATE courses
+            SET 
+                title = COALESCE($1, title),
+                description = COALESCE($2, description),
+                course_thumbnail = COALESCE($3, course_thumbnail)
+            WHERE course_id = $4
+            RETURNING *;
         `;
     };
 
     export function deleteCourse() {
-        return `DELETE FROM courses WHERE course_id = $1;`;
+        return `DELETE FROM courses WHERE course_id = $1 RETURNING course_id;`;
     };
+
+    export function deleteCourseCategories() {
+        return `DELETE FROM course_categories WHERE course_id = $1;`
+    }
 
     export function createStructure() {
         return `
@@ -262,5 +294,5 @@ export namespace DBUtil {
             FROM courses
             WHERE tutor_id = $1;
         `;
-    }
+    };
 };
