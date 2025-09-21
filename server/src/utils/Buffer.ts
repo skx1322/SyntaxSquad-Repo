@@ -8,11 +8,5 @@ export namespace FileUtil {
             throw Error("Failed to convert file into buffers.")
         }
     };
-
-    export async function mergeFile(i: ArrayBuffer){
-
-    };
-
-    
 };
 

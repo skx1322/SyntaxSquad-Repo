@@ -182,6 +182,12 @@ export namespace DBUtil {
         return `DELETE FROM course_categories WHERE course_id = $1;`
     }
 
+    export function courseOwnerCheck(){
+        return `
+            SELECT tutor_id FROM courses WHERE course_id = $1 LIMIT 1
+        `
+    }
+
     export function createStructure() {
         return `
             INSERT INTO
@@ -194,7 +200,7 @@ export namespace DBUtil {
             )
             VALUES
             ($1, $2, $3, $4, $5)
-            RETURNING item_id;
+            RETURNING *;
         `;
     };
 

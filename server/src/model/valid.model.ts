@@ -97,6 +97,21 @@ export const courseModel = new Elysia().model({
     })
 });
 
+export const courseItem = new Elysia().model({
+    item_initialize: t.Object({
+        course_id: t.String(),
+        title: t.String(),
+        content_type: t.UnionEnum(["Video", "Image", "Slide", "Link"]),
+        filename: t.String()
+    }),
+    item_finalize: t.Object({
+        course_id: t.String(),
+        fileKey: t.String(),
+        title: t.String(),
+        content_type: t.UnionEnum(["Video", "Image", "Slide", "Link"]),
+    })
+})
+
 export const utilModel = new Elysia().model({
 
 });

@@ -79,17 +79,19 @@ export interface coursesFull {
 
 export type courses_partial = courses & course_categories;
 
-export interface course_categories{
+export interface course_categories_link{
     course_id: string,
     category_id: string,
 }
+
+export type content_type = "Video" | "Image" | "Slide" | "Link"
 
 export interface course_items {
     item_id: string,
     course_id: string,
     title: string,
     content: File | string,
-    content_type: "Video" | "Image" | "Slide" | "Link",
+    content_type: content_type,
     created_at: Date,
 }
 

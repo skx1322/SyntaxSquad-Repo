@@ -29,3 +29,4 @@ export namespace IDUtil {
     }
 }
 
+// console.log(await IDUtil.NewUUID(3, false));

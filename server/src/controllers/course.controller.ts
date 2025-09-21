@@ -1,7 +1,8 @@
 import Elysia, { ElysiaCustomStatusResponse, status, t } from "elysia";
 import { userMidware } from "../middleware/auth";
-import { courseModel } from "../model/valid.model";
+import { courseItem, courseModel } from "../model/valid.model";
 import { COURSE_DB } from "../service/course.db";
+import { ITEM_DB } from "../service/course.structure";
 
 const courseCall = new Elysia({ name: "/course" })
 courseCall.group("/config", (courseApp) =>
@@ -88,8 +89,36 @@ courseCall.group("/config", (courseApp) =>
 courseCall.group("/items", (itemApp) =>
     itemApp
         .use(userMidware)
-        .post("", () => {
+        .use(courseItem)
+        .post("/initialize", async ({ getUser, body }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
 
+            return await new ITEM_DB().createCourseItemLarge(getUser.user_id, body);
+        }, {
+            body: "item_initialize"
+        })
+        .post("/finalize", async({ getUser, body }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
+
+            return await new ITEM_DB().finalizeCourseItem(getUser.user_id, body);
+        }, {
+            body: "item_finalize"
         })
         .get("", () => {
 

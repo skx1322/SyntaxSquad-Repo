@@ -39,4 +39,13 @@ export namespace BucektUtil {
 
         return true;
     };
+
+    export async function visibilityConfig(path: string, expireIn: number = 900) {
+        const s3File = s3.presign(path, {
+            acl: "public-read",
+            expiresIn: expireIn
+        });
+
+        return s3File;
+    };
 };
