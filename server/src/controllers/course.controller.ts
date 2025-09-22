@@ -105,7 +105,7 @@ courseCall.group("/items", (itemApp) =>
         }, {
             body: "item_initialize"
         })
-        .post("/finalize", async({ getUser, body }) => {
+        .post("/finalize", async ({ getUser, body }) => {
             if (getUser instanceof ElysiaCustomStatusResponse) {
                 return getUser;
             };
@@ -120,14 +120,50 @@ courseCall.group("/items", (itemApp) =>
         }, {
             body: "item_finalize"
         })
-        .get("", () => {
+        .put("", async({ getUser, body }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
 
+            return await new ITEM_DB().finalizeUpdate(getUser.user_id, body);
+        }, {
+            body: "item_update_finalize"
         })
-        .put("", () => {
+        .get("", async ({ getUser, query: { course_id, item_id } }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
 
+            return await new ITEM_DB().structureGet(getUser.user_id, item_id, course_id);
+        }, {
+            query: "item_read"
         })
-        .delete("", () => {
+        .delete("", async ({ getUser, body: { item_id, course_id } }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser;
+            };
+            if (getUser.role === "Student") {
+                return status(401, {
+                    success: false,
+                    message: `Student are not allowed to create course.`
+                });
+            };
 
+            return await new ITEM_DB().structureDelete(getUser.user_id, item_id, course_id);
+        }, {
+            body: "item_read"
         })
 );
 

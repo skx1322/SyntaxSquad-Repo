@@ -139,7 +139,7 @@ export namespace DBUtil {
         `
     };
 
-    export function readCourseFull(){
+    export function readCourseFull() {
         return `
             SELECT
                 c.course_id,
@@ -182,7 +182,7 @@ export namespace DBUtil {
         return `DELETE FROM course_categories WHERE course_id = $1;`
     }
 
-    export function courseOwnerCheck(){
+    export function courseOwnerCheck() {
         return `
             SELECT tutor_id FROM courses WHERE course_id = $1 LIMIT 1
         `
@@ -210,15 +210,26 @@ export namespace DBUtil {
         `
     };
 
+    export function readStructureOne() {
+        return `
+            SELECT * FROM course_items WHERE item_id = $1 AND course_id = $2 LIMIT 1;
+        `
+    };
+
     export function updateStructure() {
-        return `UPDATE course_items SET title = $1, content = $2, content_type = $3 WHERE item_id = $4 AND course_id = $5;`;
+        return `
+            UPDATE course_items 
+            SET title = $1, content = $2, content_type = $3 
+            WHERE item_id = $4 AND course_id = $5
+            RETURNING *;
+            `;
     };
 
     export function deleteStructure(multi?: boolean) {
         if (multi) {
-            return `DELETE FROM course_items WHERE course_id = $1;`;
+            return `DELETE FROM course_items WHERE course_id = $1 RETURNING *;`;
         } else {
-            return `DELETE FROM course_items WHERE item_id = $1 AND course_id = $2;`;
+            return `DELETE FROM course_items WHERE item_id = $1 AND course_id = $2 RETURNING *;`;
         }
     };
 

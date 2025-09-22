@@ -109,6 +109,24 @@ export const courseItem = new Elysia().model({
         fileKey: t.String(),
         title: t.String(),
         content_type: t.UnionEnum(["Video", "Image", "Slide", "Link"]),
+    }),
+    item_update: t.Object({
+        course_id: t.String(),
+        item_id: t.String(),
+        title: t.Optional(t.String()),
+        content: t.Optional(t.String()),
+        content_type: t.Optional(t.String())
+    }),
+    item_update_finalize: t.Object({
+        item_id: t.String(),
+        course_id: t.String(),
+        fileKey: t.String(),
+        title: t.String(),
+        content_type: t.UnionEnum(["Video", "Image", "Slide", "Link"]),
+    }),
+    item_read: t.Object({
+        item_id: t.String(),
+        course_id: t.String()
     })
 })
 
