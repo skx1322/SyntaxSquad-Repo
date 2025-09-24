@@ -41,6 +41,18 @@ userAccount.group("", (access) =>
 userAccount.group("", (authApp) =>
     authApp
         .use(userMidware)
+        .get("/auth", ({ getUser }) => {
+            if (getUser instanceof ElysiaCustomStatusResponse) {
+                return getUser
+            };
+            return status(200, {
+                success: true,
+                message: `User document retrieved.`,
+                output: {
+                    isAuth: true
+                }
+            })
+        })
         .get("/account", ({ getUser }) => {
             if (getUser instanceof ElysiaCustomStatusResponse) {
                 return getUser

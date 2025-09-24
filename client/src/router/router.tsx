@@ -1,20 +1,20 @@
-import {createBrowserRouter} from "react-router-dom";
-import App from "../App.jsx"
-import Home from "../pages/home.jsx";
-import Course from "../pages/course.jsx";
-import Account from "../pages/account.jsx";
-import About from "../pages/about.jsx";
-import Detail from "../pages/detail.jsx";
-import Auth from "../hook/auth.jsx";
-import Dashboard from "../pages/dashboard.jsx";
+import { createBrowserRouter } from "react-router";
+import Home from "../pages/home";
+import Course from "../pages/course";
+import Account from "../pages/account";
+import About from "../pages/about";
+import Detail from "../pages/detail";
+import Auth from "../hook/auth";
+import Dashboard from "../pages/dashboard";
+import Main from "../components/main";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Main />,
     children: [
       {
-        index: true,
+        path: "/",
         element: <Home />,
       },
       {

@@ -1,11 +1,10 @@
-import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import {
   categoryData,
   commentData,
   heroData,
   orgData,
-} from "../common/component.data";
+} from "../data/component.data";
 
 const Home = () => {
   return (

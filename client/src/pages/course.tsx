@@ -1,7 +1,7 @@
 import * as React from "react";
-import { courseData } from "../common/static.data";
+import { courseData } from "../data/static.data";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const Course = () => {
   const paginationSize = 5;
@@ -13,7 +13,7 @@ const Course = () => {
   const indexOfFirstItem = indexOfLastItem - paginationSize;
   const currentCourses = courseData.slice(indexOfFirstItem, indexOfLastItem);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {

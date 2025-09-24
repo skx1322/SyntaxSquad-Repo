@@ -104,7 +104,7 @@ export class COURSE_DB {
                 success: true,
                 message: `Course retrieved successfully.`,
                 output: result[0]
-            })
+            });
         } catch (error) {
             console.error(error);
             return status(500, {

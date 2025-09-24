@@ -1,13 +1,13 @@
-import { Outlet } from "react-router-dom";
-import Header from "./components/header";
+import { Outlet } from "react-router";
+import Header from "./header";
+import Footer from "./footer";
 import { Toaster } from "react-hot-toast";
-import Footer from "./components/footer";
 
-function App() {
+const Main = () => {
   return (
-    <div className="font-main">
+    <div>
       <Header></Header>
-      <Outlet />
+      <Outlet></Outlet>
       <Toaster
         position="top-right"
         reverseOrder={false}
@@ -44,6 +44,6 @@ function App() {
       <Footer></Footer>
     </div>
   );
-}
+};
 
-export default App;
+export default Main;

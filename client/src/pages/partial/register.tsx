@@ -1,9 +1,13 @@
 import * as React from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import toast from "react-hot-toast";
 
-const Register = ({ onClickPage }) => {
+interface onClick {
+  onClickPage: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Register = ({ onClickPage }: onClick) => {
   const [registerData, SetRegisterData] = React.useState({
     username: "",
     email: "",
@@ -11,7 +15,7 @@ const Register = ({ onClickPage }) => {
     confirmPassword: "",
   });
 
-  const handleInputChange = (event) => {
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     SetRegisterData((prevData) => ({
       ...prevData,
@@ -19,7 +23,7 @@ const Register = ({ onClickPage }) => {
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (registerData.password !== registerData.confirmPassword) {
       toast.error(`Password does not match confirm password!`);
@@ -117,7 +121,7 @@ const Register = ({ onClickPage }) => {
             </div>
 
             <div className="flex justify-between gap-2 mt-6">
-              <Link className="text-accent/80 hover:text-accent transform transistion-normal duration-500 hover:underline">
+              <Link to={"/"} className="text-accent/80 hover:text-accent transform transistion-normal duration-500 hover:underline">
                 Activate Account
               </Link>
               <Link

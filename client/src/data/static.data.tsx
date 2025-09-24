@@ -1,3 +1,5 @@
+import type { commentData } from "../types/types";
+
 export const courseData = [
   {
     courseID: "ND-1322",
@@ -98,7 +100,7 @@ export const courseStrucutre = [
   },
 ];
 
-export const courseComment = [
+export const courseComment: commentData[] = [
   {
     courseID: "ND-1322",
     commentID: "ND-1322-CC-1",

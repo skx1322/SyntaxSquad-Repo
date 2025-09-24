@@ -1,16 +1,16 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
-import { headerData } from "../common/component.data";
+import { Link, useLocation } from "react-router";
+import { headerData } from "../data/component.data";
 import { FaBars } from "react-icons/fa";
 
 const Header = () => {
+  const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
   const handleToggleMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const location = useLocation();
   return (
     <header className="bg-color-background p-4 shadow-md relative">
       <nav className="flex justify-between items-center lg:px-24 md:px-12 sm:px-6">
@@ -34,9 +34,7 @@ const Header = () => {
               key={index}
               to={data.path}
               className={`text-3xl font-semibold mb-6 md:text-color-text md:text-base md:font-medium md:mb-0 hover:text-accent/60 transition-colors 
-                ${
-                  location.pathname === data.path ? "text-accent" : "text-black"
-                }`}
+                ${location.pathname === data.path ? "text-accent" : "text-black"}`}
               onClick={() => setIsMobileMenuOpen(false)}
             >
               {data.headerName}
@@ -47,7 +45,9 @@ const Header = () => {
       <div className="md:hidden absolute right-4 top-4 z-50">
         <FaBars
           onClick={handleToggleMenu}
-          className={`text-color-text text-2xl cursor-pointer transform transistion-normal duration-500 ${isMobileMenuOpen ? "rotate-90 text-accent" : "rotate-0"}`}
+          className={`text-color-text text-2xl cursor-pointer transform transistion-normal duration-500 ${
+            isMobileMenuOpen ? "rotate-90 text-accent" : "rotate-0"
+          }`}
         />
       </div>
     </header>

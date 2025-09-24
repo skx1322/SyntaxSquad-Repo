@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "react-hot-toast";
 import { FaStar } from "react-icons/fa";
 import {
@@ -7,12 +7,12 @@ import {
   courseComment,
   courseDetailBrief,
   courseStrucutre,
-} from "../common/static.data";
+} from "../data/static.data";
+import type { commentData, courseData } from "../types/types";
 
 const Detail = () => {
-  const [courseDetail, setCourseDetail] = React.useState({});
-  const [commentData, setCommentData] = React.useState([]);
-  const [courseCategory, setCourseCategory] = React.useState([]);
+  const [courseDetail, setCourseDetail] = React.useState<courseData>();
+  const [commentData, setCommentData] = React.useState<commentData[]>([]);
 
   const courseID = useParams().courseID;
   const navigate = useNavigate();
@@ -28,7 +28,6 @@ const Detail = () => {
         return;
       }
       setCourseDetail(course);
-      setCourseCategory(courseDetail.courseCategory);
 
       const comments = courseComment.filter(
         (data) => data.courseID === courseID
@@ -62,18 +61,14 @@ const Detail = () => {
           </h1>
           <p className="text-color-text">{courseDetail.courseDescription}</p>
           <div className="flex flex-wrap gap-2">
-            {courseCategory?.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {courseCategory?.map((category, index) => (
-                  <span
-                    key={index}
-                    className="bg-secondary/80 text-white text-xs font-semibold px-3 py-1 rounded-full"
-                  >
-                    {category}
-                  </span>
-                ))}
-              </div>
-            )}
+            {courseDetail.courseCategory.map((category, index) => (
+              <span
+                key={index}
+                className="bg-secondary/80 text-white text-xs font-semibold px-3 py-1 rounded-full"
+              >
+                {category}
+              </span>
+            ))}
           </div>
           <p className="text-gray-600 font-semibold">
             From:{" "}

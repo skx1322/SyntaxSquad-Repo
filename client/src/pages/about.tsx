@@ -1,11 +1,11 @@
-import { developerData } from "../common/static.data";
+import { developerData } from "../data/static.data";
 import {
   FaDollarSign,
   FaGithub,
   FaGraduationCap,
   FaUserCheck,
 } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 
 const About = () => {
   return (
@@ -85,7 +85,7 @@ const About = () => {
                 <div key={mediaIndex}>
                   {social.github && (
                     <Link
-                      href={social.github}
+                      to={social.github}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-color-primary hover:text-color-accent transition-colors duration-300"

@@ -1,14 +1,24 @@
 import * as React from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router";
+import type { APIResponse } from "../../types/types";
+import type { login } from "../../types/user.types";
+import userAPI from "../../common/user.api";
+import toast from "react-hot-toast";
 
-const Login = ({onClickPage}) => {
-  const [loginData, setLoginData] = React.useState({
+interface onClick {
+  onClickPage: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const Login = ({ onClickPage }: onClick) => {
+  const [loginData, setLoginData] = React.useState<login>({
     username: "",
-    password: "",
+    password_hash: "",
   });
 
-  const handleInputChange = (event) => {
+  const navigate = useNavigate();
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setLoginData((prevData) => ({
       ...prevData,
@@ -16,16 +26,39 @@ const Login = ({onClickPage}) => {
     }));
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const response = await axios.post("", loginData, { withCredentials: true });
-    if (response.data.success) {
+    try {
+      const response = await axios.post<APIResponse<string>>(
+        `${userAPI.login.link}`,
+        {
+          username: loginData.username,
+          password_hash: loginData.password_hash
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        toast.success(response.data.message);
+        navigate("/dashboard");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        console.error(error);
+        toast.error(error.response.data.message);
+      } else {
+        toast.error(`Internal server error.`);
+      }
     }
   };
 
-    const changePage = () =>{
+  const changePage = () => {
     onClickPage("register");
-  }
+  };
   return (
     <section className="bg-background min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-md">
@@ -59,20 +92,30 @@ const Login = ({onClickPage}) => {
                 Password
               </label>
               <input
-                id="password"
-                name="password"
+                id="password_hash"
+                name="password_hash"
                 type="password"
                 required
                 className="pl-4 appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-accent focus:border-accent focus:z-10 sm:text-sm"
                 placeholder="Password"
-                value={loginData.password}
+                value={loginData.password_hash}
                 onChange={handleInputChange}
               />
             </div>
 
             <div className="flex justify-between gap-2 mt-6">
-              <Link className="text-accent/80 hover:text-accent transform transistion-normal duration-500 hover:underline" >Activate Account</Link>
-              <Link  className="text-accent/80 hover:text-accent transform transistion-normal duration-500 hover:underline" to={"/forgot-password"}>Forgot Password?</Link>
+              <Link
+                to={"/"}
+                className="text-accent/80 hover:text-accent transform transistion-normal duration-500 hover:underline"
+              >
+                Activate Account
+              </Link>
+              <Link
+                className="text-accent/80 hover:text-accent transform transistion-normal duration-500 hover:underline"
+                to={"/forgot-password"}
+              >
+                Forgot Password?
+              </Link>
             </div>
           </div>
 
@@ -86,7 +129,15 @@ const Login = ({onClickPage}) => {
           </div>
         </form>
         <div className="text-center border-t-4 rounded border-gray-500 py-6">
-          <p>Do not have an account? <b onClick={changePage} className="text-accent/80 cursor-pointer hover:text-accent transform transistion-normal duration-500 hover:underline">Click Here!</b></p>
+          <p>
+            Do not have an account?{" "}
+            <b
+              onClick={changePage}
+              className="text-accent/80 cursor-pointer hover:text-accent transform transistion-normal duration-500 hover:underline"
+            >
+              Click Here!
+            </b>
+          </p>
         </div>
       </div>
     </section>
